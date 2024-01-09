@@ -15,6 +15,7 @@ const nodemailerConfig = {
 
 const transport = nodemailer.createTransport(nodemailerConfig);  //  обект, який буде займатись доставкою пошти
 
+// ф-ція sendEmail
 const sendEmail = async (data) => {
   const email = { ...data, from: "goit_ruslana@meta.ua" };
   
