@@ -1,5 +1,5 @@
-const { Schema, model } = require("mongoose");
-const Joi = require("joi"); // joi - для перевірки даних, які приходять із фронтенда
+const { Schema, model } = require("mongoose"); // mongoose - перевіряє те, що зберігаємо в базі даних
+const Joi = require("joi");                    // joi - для перевірки даних, які приходять із фронтенда
 
 const handleMongooseError = require("../middleswares/handleMongooseError");
 
@@ -17,20 +17,33 @@ const contactSchema = new Schema(
       type: String,
     },
     favorite: {
-      type: Boolean,
-      default: false,
+      //улюблена книга чи ні
+      type: Boolean, //тип поля, якщо тип не поставили
+      default: false, //значення за замовчуванням
     },
     owner: {
       type: Schema.Types.ObjectId,
       ref: "user",
-    },
+    },                                      // для прикладу
+                                            // genre: {              може бути поле жанр (більше до книг підходить). Можна втбрати жанр тільки з переліку
+                                            //   type: String,       тип строка
+                                            //   enum: ["fantastic", "love", "triller"],  перелік жанрів
+                                            //   default: false,
+                                            // },
+                                             // data: {               може бути ще дата
+                                            //   type: String,
+                                             //   //16-10-2024
+                                            //   match: /^\d{2}-\d{2}-\d{4}$/, регулярний вираз для формату дати
+                                             //   required: true,
+                                            // },
   },
   { versionKey: false, timestamps: true }
-);  // для того, щоб показувало не версію документа, а дату створення обьекта
+);  // для того, щоб показувало не версію документа, а дату створення обьекта в базі даних, бо знизу під полями ставить -v
 
-contactSchema.post("save", handleMongooseError);
+//типа коли при збереженні в бд сталась помилка, нехай спрацює ця мідлвара. Тобто це для того, щоб вертало ще й правильний  статус помилки
+contactSchema.post("save", handleMongooseError); 
 
-// joi - схема для перевірки даних, які приходять із фронтенда
+// joi - схема для перевірки даних, які приходять із фронтенда!!!
 const addSchema = Joi.object({
   name: Joi.string().required(),
   email: Joi.string().required(),

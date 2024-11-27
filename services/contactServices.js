@@ -3,7 +3,7 @@ const { Contact } = require("../models/contact");
 const { User } = require("../models/user");
 const { HttpError, sendEmail } = require("../helpers");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");                                       //пакет для генерації токена
 const gravatar = require("gravatar");                                      // пакет для генерації аватара по емейл
 const path = require("path");           
 const fs = require("fs/promises");                                         // відмовідає за всі операції з файлами
@@ -100,11 +100,11 @@ exports.signup = async (userdata) => {
   const user = await User.findOne({ email });
   
    if (user) {
-     throw HttpError(409, "Email in use");
+     throw HttpError(409, "Email in use");  //якщо такий користувач вже є, то не реєструємо йго, а викидаємо помилку
      
    }
   
-  const hashPassword = await bcrypt.hash(password, 10);
+  const hashPassword = await bcrypt.hash(password, 10); //хешуємо пароль (без можливості розшифрувати. 10 це сіль, тобто сила шифрування)
   const avatarURL = gravatar.url(email);                                     // створюємо аватарку автоматично
   const verificationToken = nanoid();
 
@@ -134,7 +134,6 @@ exports.signup = async (userdata) => {
  * @вертає користувача, якщо такий є і новий токен для нього
  */
 exports.login = async (email, password) => {
-  
   const user = await User.findOne({ email });
 
   if (!user) {
@@ -148,17 +147,19 @@ exports.login = async (email, password) => {
   const passwordCompare = await bcrypt.compare(password, user.password);
 
   if (!passwordCompare) {
-     throw HttpError(401, "Email or password invalid");
+    throw HttpError(401, "Email or password invalid");
   }
 
   const payload = {
     id: user._id,
-  }
+  };
 
+  //для генерації токена відправляється id користувача, секретний ключ, який самі придумуємо і записуємо в env
+  //та в expiresIn вказуємо, скільки буде "жити" токен
   const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: "24h" });
   await User.findByIdAndUpdate(user._id, { token });
 
-  return {user, token}
+  return { user, token };
 }
 
 /***

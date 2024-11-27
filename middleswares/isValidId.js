@@ -2,6 +2,7 @@ const { isValidObjectId } = require("mongoose");
 
 const { HttpError } = require("../helpers");
 
+//перевіряємо чи правильний id за допомогою встроєної ф-ції isValidObjectId в mongoose
 const isValidId = (req, res, next) => {
   const { contactId } = req.params;
   console.log('проверка id');

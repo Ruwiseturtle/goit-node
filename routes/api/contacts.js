@@ -12,6 +12,7 @@ const { schemas } = require("../../models/contact");
 router.get("/", authenticate, ctrl.getAll);
 
 // по шляху '/:contactId' викликаємо ф-цію, яка повертає контакт з id, який можна витягнути з req.params - параметри запиту
+//authenticate - 
 router.get("/:contactId", authenticate, isValidId, ctrl.getById);
 
 // викликаємо ф-цію, яка у базу данних (файл json з даними добавить новий запис).

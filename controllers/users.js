@@ -24,7 +24,7 @@ const registerUser = async (req, res, next) => {
 // коли користувач в поштовому язику заходить по ссилку для підтверження емейлу, то викликається цей роутер
 const verifyEmail = async (req, res) => {
   const { verificationToken } = req.params;
-  const user = await User.findOne({ verificationToken });
+  const user = await User.findOne({ verificationToken }); //findOne - знаходе перше співпадіння, якщо його немає, повертає null
 
   if (!user) {
     throw HttpError(401, "Email found");

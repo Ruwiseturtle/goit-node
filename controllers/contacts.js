@@ -45,6 +45,7 @@ const add = async (req, res, next) => {
 // ************ поновити контакт по id ************
 const updateById = (async (req, res) => {
   // const updatedContact = await Contact.findByIdAndUpdate(id, { name, year, role }, { new: true });
+  //{ new: true } - це щоб вертало новий обьект, на який оновили, а не старий
   const updatedContact = await contactServices.updateContact(req.params.contactId, req.body);
 
   res.status(200).json({
